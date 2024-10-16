@@ -1,66 +1,37 @@
-## Foundry
+## proxy
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## abi.encodeWithSelector:
 
-Foundry consists of:
+    This function is used to encode function calls. It takes a function selector and the parameters of that function as arguments and returns the encoded data in bytes.
+    The encoded data can later be used to call another contract’s function.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## IChild.setNo.selector:
 
-## Documentation
+    selector: This represents the first 4 bytes of the hash (keccak256) of the function signature.
+    For example, if the function in IChild interface is:
 
-https://book.getfoundry.sh/
+    solidity
 
-## Usage
+        function setNo(uint256 _newNo) external;
 
-### Build
+            The function signature would be setNo(uint256).
+            The selector is bytes4(keccak256("setNo(uint256)")). This is used to identify the function you are calling in the target contract.
 
-```shell
-$ forge build
-```
+    _newNo:
+        This is the parameter that will be passed to the setNo function. In this case, it is a uint256 value representing the new number.
 
-### Test
+    abi.encodeWithSelector(IChild.setNo.selector, _newNo):
+        This encodes the selector for the setNo function along with the parameter _newNo.
+        The result will be a bytes object containing the necessary data to call the setNo function with _newNo as input.
 
-```shell
-$ forge test
-```
+    bytes memory calldatas:
+        This stores the encoded data in a bytes variable named calldatas. This encoded data can now be used to make low-level calls to the target contract (e.g., using call or delegatecall).
 
-### Format
+## Why Use abi.encodeWithSelector?
 
-```shell
-$ forge fmt
-```
+    In Solidity, low-level calls (like call, delegatecall, or staticcall) require encoded function data.
+    This method allows for dynamic function calls where you don’t hardcode the call but encode it based on the function selector and parameters.
 
-### Gas Snapshots
 
-```shell
-$ forge snapshot
-```
 
-### Anvil
 
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
